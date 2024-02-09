@@ -12,8 +12,8 @@ interface ListaLivrosProps {
 }
 
 const OBTER_LIVROS = gql`
-    query ObterLivros($categoriaId: Int) {
-        livros(categoriaId: $categoriaId) {
+    query ObterLivros($categoriaId: Int, $titulo: String) {
+        livros(categoriaId: $categoriaId, titulo: $titulo) {
             id
             slug
             titulo
@@ -30,16 +30,27 @@ const ListaLivros = ({ categoria }: ListaLivrosProps) => {
 
     const [ textoBusca, setTextoBusca ] = useState('');
 
-    const { data } = useQuery<{ livros: ILivro[] }>(OBTER_LIVROS, {
+    const { data, refetch } = useQuery<{ livros: ILivro[] }>(OBTER_LIVROS, {
         variables: {
             categoriaId: categoria.id
         }
     })
 
+    const buscarLivros = (evento: React.FormEvent<HTMLFormElement>) => {
+        evento.preventDefault();
+
+        if (textoBusca) {
+            refetch({
+                categoriaId: categoria.id,
+                titulo: textoBusca
+            })
+        }
+    }
+
     // const { data: produtos } = useQuery(['buscaLivrosPorCategoria', categoria], () => obterProdutosDaCategoria(categoria))
     return (
         <section>
-            <form style={{ maxWidth: '80%', margin: '0 auto', textAlign: 'center' }}>
+            <form onSubmit={buscarLivros} style={{ maxWidth: '80%', margin: '0 auto', textAlign: 'center' }}>
                 <AbCampoTexto value={textoBusca} onChange={setTextoBusca} placeholder="Digite o título" />
                 <div style={{ marginTop: '16px' }}>
                     <AbBotao texto="Buscar" />
