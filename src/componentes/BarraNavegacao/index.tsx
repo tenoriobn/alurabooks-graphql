@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import http from "../../http"
 import { ICategoria } from "../../interfaces/ICategoria"
 import BotaoNavegacao from "../BotaoNavegacao"
 import ModalCadastroUsuario from "../ModalCadastroUsuario"
@@ -8,21 +7,24 @@ import ModalLoginUsuario from "../ModalLoginUsuario"
 import logo from './assets/logo.png'
 import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
+import { gql, useQuery } from "@apollo/client"
+
+const OBTER_CATEGORIAS = gql`
+    query obterCategorias {
+        categorias {
+            id
+            nome
+            slug
+        }
+    }
+`;
 
 const BarraNavegacao = () => {
 
     const [modalCadastroAberta, setModalCadastroAberta] = useState(false)
     const [modalLoginAberta, setModalLoginAberta] = useState(false)
 
-    const [categorias, setCategorias] = useState<ICategoria[]>([])
-
-    useEffect(() => {
-        http.get<ICategoria[]>('categorias')
-            .then(resposta => {
-                console.log(resposta.data)
-                setCategorias(resposta.data)
-            })
-    }, [])
+    const { data } = useQuery<{ categorias: ICategoria[] }>(OBTER_CATEGORIAS);
 
     let navigate = useNavigate();
 
@@ -51,7 +53,7 @@ const BarraNavegacao = () => {
             <li>
                 <a href="#!">Categorias</a>
                 <ul className="submenu">
-                    {categorias.map(categoria => (<li key={categoria.id}>
+                    {data?.categorias.map(categoria => (<li key={categoria.id}>
                         <Link to={`/categorias/${categoria.slug}`}>
                             {categoria.nome}
                         </Link>
