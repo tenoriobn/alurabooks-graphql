@@ -1,40 +1,19 @@
-import { gql, useQuery } from "@apollo/client"
-import { ICategoria } from "../../interfaces/ICategoria"
-import CardLivro from "../CardLivro"
-
-import './ListaLivros.css'
-import { ILivro } from "../../interfaces/ILivro"
-import { AbBotao, AbCampoTexto } from "ds-alurabooks"
 import { useState } from "react"
+import './ListaLivros.css'
+import { useLivros } from "../../graphql/livros/hooks"
+import { ICategoria } from "../../interfaces/ICategoria"
+import { AbBotao, AbCampoTexto } from "ds-alurabooks"
+import CardLivro from "../CardLivro"
 
 interface ListaLivrosProps {
     categoria: ICategoria
 }
 
-const OBTER_LIVROS = gql`
-    query ObterLivros($categoriaId: Int, $titulo: String) {
-        livros(categoriaId: $categoriaId, titulo: $titulo) {
-            id
-            slug
-            titulo
-            imagemCapa
-            opcoesCompra {
-                id
-                preco
-            }
-        }
-    }
-`;
-
 const ListaLivros = ({ categoria }: ListaLivrosProps) => {
 
     const [ textoBusca, setTextoBusca ] = useState('');
 
-    const { data, refetch } = useQuery<{ livros: ILivro[] }>(OBTER_LIVROS, {
-        variables: {
-            categoriaId: categoria.id
-        }
-    })
+    const { data, refetch } = useLivros(categoria)
 
     const buscarLivros = (evento: React.FormEvent<HTMLFormElement>) => {
         evento.preventDefault();
@@ -47,7 +26,6 @@ const ListaLivros = ({ categoria }: ListaLivrosProps) => {
         }
     }
 
-    // const { data: produtos } = useQuery(['buscaLivrosPorCategoria', categoria], () => obterProdutosDaCategoria(categoria))
     return (
         <section>
             <form onSubmit={buscarLivros} style={{ maxWidth: '80%', margin: '0 auto', textAlign: 'center' }}>
