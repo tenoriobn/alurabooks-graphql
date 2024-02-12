@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import './ListaLivros.css'
 import { useLivros } from "../../graphql/livros/hooks"
 import { ICategoria } from "../../interfaces/ICategoria"
@@ -18,22 +18,16 @@ const ListaLivros = ({ categoria }: ListaLivrosProps) => {
     const livros = useReactiveVar(livrosVar);
     console.log('livros =>', livros)
 
-    const { data, refetch } = useLivros(categoria)
-
-    useEffect(() => {
-        if (data?.livros) {
-            livrosVar(data.livros);
-        }
-    }, [data]);
+    useLivros(categoria)
 
     const buscarLivros = (evento: React.FormEvent<HTMLFormElement>) => {
         evento.preventDefault();
 
         if (textoBusca) {
-            refetch({
-                categoriaId: categoria.id,
-                titulo: textoBusca
-            })
+            // refetch({
+            //     categoriaId: categoria.id,
+            //     titulo: textoBusca
+            // })
         }
     }
 
@@ -47,7 +41,7 @@ const ListaLivros = ({ categoria }: ListaLivrosProps) => {
             </form>
 
             <div className="livros">
-                {data?.livros.map(livro => <CardLivro livro={livro} key={livro.id} />)}
+                {livros.map(livro => <CardLivro livro={livro} key={livro.id} />)}
             </div>
         </section>
     );
