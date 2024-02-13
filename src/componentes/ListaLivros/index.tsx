@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import './ListaLivros.css'
 import { useLivros } from "../../graphql/livros/hooks"
 import { ICategoria } from "../../interfaces/ICategoria"
-import { AbBotao, AbCampoTexto } from "ds-alurabooks"
+import { AbCampoTexto } from "ds-alurabooks"
 import CardLivro from "../CardLivro"
 import { useReactiveVar } from "@apollo/client"
 import { filtroLivrosVar, livrosVar } from "../../graphql/livros/state"
@@ -13,7 +13,19 @@ interface ListaLivrosProps {
 
 const ListaLivros = ({ categoria }: ListaLivrosProps) => {
     const [ textoBusca, setTextoBusca ] = useState('');
-    filtroLivrosVar({ categoria });
+
+    useEffect(() => {
+        filtroLivrosVar({
+            ...filtroLivrosVar(),
+            titulo: textoBusca.length >= 3 ? textoBusca : ''
+        });
+    }, [textoBusca])
+
+    filtroLivrosVar({ 
+        ...filtroLivrosVar(), 
+        categoria 
+    });
+
     const livros = useReactiveVar(livrosVar);
     useLivros()
 
@@ -21,9 +33,6 @@ const ListaLivros = ({ categoria }: ListaLivrosProps) => {
         <section>
             <form style={{ maxWidth: '80%', margin: '0 auto', textAlign: 'center' }}>
                 <AbCampoTexto value={textoBusca} onChange={setTextoBusca} placeholder="Digite o título" />
-                <div style={{ marginTop: '16px' }}>
-                    <AbBotao texto="Buscar" />
-                </div>
             </form>
 
             <div className="livros">
