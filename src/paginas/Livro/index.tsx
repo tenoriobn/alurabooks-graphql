@@ -3,10 +3,10 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 import TituloPrincipal from "../../componentes/TituloPrincipal"
 import { formatador } from "../../utils/formatador-moeda"
-
 import './Livro.css'
 import { useLivro } from "../../graphql/livros/hooks"
 import Loader from "../../componentes/Loader"
+import BlocoSobre from "../../componentes/BlocoSobre"
 
 const Livro = () => {
     const params = useParams()
@@ -61,8 +61,8 @@ const Livro = () => {
                     </div>
                 </div>
                 <div>
-                    {/* <SobreAutor autorId={livro.autor.id} />
-                    <BlocoSobre titulo="Sobre o Livro" corpo={livro.sobre} /> */}
+                    <BlocoSobre titulo="Sobre o Autor" corpo={data?.livro.autor.sobre} /> 
+                    <BlocoSobre titulo="Sobre o Livro" corpo={data?.livro.sobre} /> 
                 </div>
             </div>
         </section>
