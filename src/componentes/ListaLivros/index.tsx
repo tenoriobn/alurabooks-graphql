@@ -13,24 +13,20 @@ interface ListaLivrosProps {
 }
 
 const ListaLivros = ({ categoria }: ListaLivrosProps) => {
+
     const [textoBusca, setTextoDaBusca] = useState('')
 
     useEffect(() => {
         filtroLivrosVar({
             ...filtroLivrosVar(),
-            titulo: textoBusca.length >= 3 ? textoBusca : ''
+            titulo: textoBusca.length >= 3 ? textoBusca : '',
+            categoria,
         });
-    }, [textoBusca]);
-    
+    }, [textoBusca, categoria]);
 
-    filtroLivrosVar({
-        ...filtroLivrosVar(),
-        categoria,
-    })
-    
     const livros = useReactiveVar(livrosVar);
 
-    useLivros()
+    useLivros();
 
     return <section>
         <form style={{ maxWidth: '80%', margin: '0 auto', textAlign: 'center' }}>
