@@ -6,19 +6,23 @@ import { formatador } from "../../utils/formatador-moeda"
 
 import './Livro.css'
 import { useLivro } from "../../graphql/livros/hooks"
+import Loader from "../../componentes/Loader"
 
 const Livro = () => {
     const params = useParams()
     const [opcao, setOpcao] = useState<AbGrupoOpcao>()
-    const { data } = useLivro(params.slug || '');
+    const { data, loading } = useLivro(params.slug || '');
 
     const opcoes: AbGrupoOpcao[] = data?.livro.opcoesCompra ? data?.livro.opcoesCompra.map(opcao => ({
         id: opcao.id,
         corpo: formatador.format(opcao.preco),
         titulo: opcao.titulo,
         rodape: opcao.formatos ? opcao.formatos.join(',') : ''
-    }))
-        : []
+    })) : [];
+
+    if (loading) {
+        return <Loader />
+    }
 
     return (
         <section className="livro-detalhe">
