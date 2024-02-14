@@ -11,7 +11,17 @@ import Loader from "../../componentes/Loader"
 const Livro = () => {
     const params = useParams()
     const [opcao, setOpcao] = useState<AbGrupoOpcao>()
-    const { data, loading } = useLivro(params.slug || '');
+    const { data, loading, error } = useLivro(params.slug || '');
+
+    if (error) {
+        console.log("Alguma coisa deu errada");
+        console.log(error);
+        return <h1>Ops! Algum erro inesperado aconteceu!</h1>
+    }
+
+    if (loading) {
+        return <Loader />
+    }
 
     const opcoes: AbGrupoOpcao[] = data?.livro.opcoesCompra ? data?.livro.opcoesCompra.map(opcao => ({
         id: opcao.id,
@@ -19,10 +29,6 @@ const Livro = () => {
         titulo: opcao.titulo,
         rodape: opcao.formatos ? opcao.formatos.join(',') : ''
     })) : [];
-
-    if (loading) {
-        return <Loader />
-    }
 
     return (
         <section className="livro-detalhe">
