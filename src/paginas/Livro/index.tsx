@@ -1,4 +1,4 @@
-import { AbBotao, AbGrupoOpcao, AbGrupoOpcoes, AbInputQuantidade } from "ds-alurabooks"
+import { AbBotao, AbGrupoOpcao, AbGrupoOpcoes, AbInputQuantidade, AbTag } from "ds-alurabooks"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import TituloPrincipal from "../../componentes/TituloPrincipal"
@@ -52,7 +52,7 @@ const Livro = () => {
                         <p><strong>*Você terá acesso às futuras atualizações do livro.</strong></p>
                         <footer>
                             <div className="qtdContainer">
-                                <AbInputQuantidade />
+                                <AbInputQuantidade onChange={() => {}} value={0} />
                             </div>
                             <div>
                                 <AbBotao texto="Comprar" />
@@ -63,6 +63,9 @@ const Livro = () => {
                 <div>
                     <BlocoSobre titulo="Sobre o Autor" corpo={data?.livro.autor.sobre} /> 
                     <BlocoSobre titulo="Sobre o Livro" corpo={data?.livro.sobre} /> 
+                </div>
+                <div className="tags">
+                    {data?.livro.tags?.map(tag => <AbTag contexto="secundario" key={tag.nome} texto={tag.nome} />)}
                 </div>
             </div>
         </section>

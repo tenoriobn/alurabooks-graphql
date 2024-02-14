@@ -7,15 +7,15 @@ export const useLivros = () => {
   const filtro = useReactiveVar(filtroLivrosVar)
 
   return useQuery<{ livros: ILivro[] }>(OBTER_LIVROS, {
-    variables: {
-      categoriaId: filtro.categoria?.id,
-      titulo: filtro.titulo
-    },
-    onCompleted(data) {
-      if (data.livros) {
-        livrosVar(data.livros)
-      }
-    },
+      variables: {
+          categoriaId: filtro.categoria?.id,
+          titulo: filtro.titulo
+      },
+      onCompleted(data) {
+          if (data.livros) {
+              livrosVar(data.livros)
+          }
+      },
   })
 }
 
